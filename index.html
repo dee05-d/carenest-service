@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BabySitter Service</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<nav class="navbar">
+    <div class="logo">CareNest</div>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><button id="darkToggle">🌙</button></li>
+    </ul>
+</nav>
+
+<body>
+    <header>
+        <h1>BabySitter Service</h1>
+        <nav>
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="services.html" class="nav-link">Services</a>
+            <a href="order.html" class="nav-link">Order Now</a>
+            <a href="about.html" class="nav-link">About</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section fade-in">
+        <h2>Trusted Babysitters, Anytime You Need</h2>
+        <p>Book professional babysitters easily and safely. Pay via BTC or Gift Card.</p>
+     <div class="availability">
+    <span class="dot"></span> Available Now
+   </div>
+        <a href="order.html" class="btn">Book Now</a>
+    </section>
+
+<div class="booking-grid">
+
+  <div class="form-group">
+    <label>Street Address</label>
+    <input type="text" id="streetAddress" placeholder="123 Main Street">
+  </div>
+
+  <div class="form-group">
+  <label>State</label>
+  <select id="stateSelect">
+      <option value="">Loading states...</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label>City</label>
+  <select id="citySelect" disabled>
+      <option value="">Select City</option>
+  </select>
+</div>
+
+  <div class="form-group">
+    <label>Date</label>
+    <input type="date" id="bookingDate">
+  </div>
+
+  <div class="form-group">
+    <label>Time</label>
+    <input type="time" id="bookingTime">
+  </div>
+
+</div>
+
+
+
+<div id="availabilityMessage" class="availability-box"></div>
+    <p id="slotInfo"></p>
+</section>
+
+<section class="service-type">
+    <h2>Select Care Type</h2>
+
+    <div class="service-options">
+        <div class="service-card active" data-type="infant">
+            👶 Infant Care
+        </div>
+
+        <div class="service-card" data-type="toddler">
+            🧒 Toddler Care
+        </div>
+
+        <div class="service-card" data-type="child">
+            👦 Child Care
+        </div>
+
+        <div class="service-card" data-type="elderly">
+            👵 Elderly Care
+        </div>
+    </div>
+</section>
+
+<div id="errorBox" style="color: red; display: none; margin-top: 10px;"></div>
+<section class="pricing">
+    <h2>Affordable Pricing</h2>
+    <div class="pricing-cards">
+        <div class="price-card" data-plan="hourly">
+            <h3>Hourly</h3>
+            <p class="price">$25<span>/hour</span></p>
+            <ul>
+                <li>✔ CPR Certified</li>
+                <li>✔ Homework Help</li>
+                <li>✔ Meal Preparation</li>
+            </ul>
+           <button type="button" class="book-btn">Book Now</button>
+
+        </div>
+        <div class="price-card" data-plan="halfday">
+            <h3>Half Day</h3>
+            <p class="price">$150<span>/Halfday</span></p>
+            <ul>
+                <li>✔ Outdoor Activities</li>
+                <li>✔ Learning Games</li>
+                <li>✔ Flexible Schedule</li>
+            </ul>
+           <button type="button" class="book-btn">Book Now</button>
+        </div>
+
+        <div class="price-card"
+        data-plan="overnight">
+            <h3>Overnight</h3>
+            <p class="price">$160<span>/night</span></p>
+            <ul>
+                <li>✔ Overnight Supervision</li>
+                <li>✔ Feeding & Nap Time</li>
+                <li>✔ 12+ Hour Care</li>
+            </ul>
+           <button type="button" class="book-btn">Book Now</button>
+
+        </div>
+
+        <div class="price-card"
+        data-plan="fullday">
+            <h3>Full Day</h3>
+            <p class="price">$250<span>/day</span></p>
+            <ul>
+                <li>✔ Full Supervision</li>
+                <li>✔ Feeding & Nap Time</li>
+                <li>✔ Parent Updates</li>
+            </ul>
+           <button type="button" class="book-btn">Book Now</button>
+
+        </div>
+
+        
+    </div>
+</section>
+
+
+
+<section class="pricing-section fade-in delay-2">
+    <h2>Our Pricing</h2>
+
+    <div class="pricing-cards">
+
+        <div class="price-card">
+            <h3>Standard Care</h3>
+            <p class="price">$25<span>/hour</span></p>
+            <ul>
+                <li>✔ 1 Babysitter</li>
+                <li>✔ Basic Childcare</li>
+                <li>✔ Light Meal Prep</li>
+            </ul>
+            <button type="button" class="book-btn">Book Now</button>
+
+        </div>
+
+        <div class="price-card featured">
+            <h3>Premium Care</h3>
+            <p class="price">$40<span>/hour</span></p>
+            <ul>
+                <li>✔ Certified Professional</li>
+                <li>✔ Homework Help</li>
+                <li>✔ Activity Planning</li>
+            </ul>
+            <button type="button" class="book-btn">Book Now</button>
+
+        </div>
+
+        <div class="price-card">
+            <h3>Overnight Care</h3>
+            <p class="price">$180<span>/hour</span></p>
+            <ul>
+                <li>✔ 8+ Hours Care</li>
+                <li>✔ Night Supervision</li>
+                <li>✔ Morning Prep</li>
+            </ul>
+           <button type="button" class="book-btn">Book Now</button>
+
+        </div>
+
+    </div>
+</section>
+
+ <!-- Testimonials Section -->
+    <section class="testimonials-section fade-in delay-1">
+        <h2>What Parents Say</h2>
+        <div id="testimonialBox">
+            <p id="testimonialText">"Alice was amazing with my kids. Very reliable!"</p>
+            <p id="testimonialAuthor">- Jane D.</p>
+        </div>
+    </section>
+
+<section class="countdown-section">
+    <h2>⚡ Limited Spots Available Today</h2>
+    <h3 id="countdownTimer">02:00:00</h3>
+    <p>Only 2 booking slots remaining!</p>
+</section>
+
+<section class="security">
+    <h2>Secure & Trusted Payments</h2>
+    <div class="badges">
+        <div>🔐 256-bit SSL Encryption</div>
+        <div>💳 Secure Payments</div>
+        <div>✔ Verified Background Checks</div>
+        <div>⭐ 98% Satisfaction Guarantee</div>
+    </div>
+</section>
+
+
+<section class="stats">
+    <div class="stat">
+        <h3 class="counter" data-target="150">0</h3>
+        <p>Happy Families</p>
+    </div>
+    <div class="stat">
+        <h3 class="counter" data-target="500">0</h3>
+        <p>Hours Completed</p>
+    </div>
+    <div class="stat">
+        <h3 class="counter" data-target="98">0</h3>
+        <p>% Satisfaction</p>
+    </div>
+</section>
+
+
+<section class="features-section fade-in delay-3">
+    <h2>Why Choose Us?</h2>
+
+    <div class="features-grid">
+        <div class="feature-box">
+            <h3>🛡 Background Checked</h3>
+            <p>All babysitters undergo strict screening and verification.</p>
+        </div>
+
+        <div class="feature-box">
+            <h3>⚡ Instant Booking</h3>
+            <p>Book in less than 2 minutes from anywhere.</p>
+        </div>
+
+        <div class="feature-box">
+            <h3>💬 24/7 Support</h3>
+            <p>Live chat support anytime you need assistance.</p>
+        </div>
+
+        <div class="feature-box">
+            <h3>🔒 Secure Payments</h3>
+            <p>Pay safely with BTC or Gift Card options.</p>
+        </div>
+    </div>
+</section>
+<section class="stats-section fade-in delay-4">
+    <div class="stat">
+        <h3 id="stat1">256+</h3>
+        <p>Happy Families</p>
+    </div>
+    <div class="stat">
+        <h3 id="stat2">150+</h3>
+        <p>Babysitters</p>
+    </div>
+    <div class="stat">
+        <h3 id="stat3">3267+</h3>
+        <p>Bookings Completed</p>
+    </div>
+</section>
+   
+
+</div>
+<section class="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+        <h4>Are you certified?</h4>
+        <p>Yes, CPR & First Aid certified.</p>
+    </div>
+    <div class="faq-item">
+        <h4>Do you offer overnight care?</h4>
+        <p>Yes, overnight services available.</p>
+    </div>
+</section>
+<section class="newsletter">
+    <h2>Get Exclusive Parenting Tips</h2>
+    <input type="email" placeholder="Enter your email">
+    <button>Subscribe</button>
+</section>
+<section class="trusted">
+    <h2>Trusted By Families Nationwide</h2>
+    <div class="logos">
+        <div>🏆 Parenting Weekly</div>
+        <div>👶 Family Care Award</div>
+        <div>⭐ Top Rated 2025</div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 CareNest. All rights reserved.</p>
+    <div>
+        <a href="#">Facebook</a> |
+        <a href="#">Instagram</a> |
+        <a href="#">Twitter</a>
+    </div>
+</footer>   
+<div class="chat-btn" id="chatBtn">
+    💬
+</div>
+<div class="live-booking" id="liveBooking">
+    Someone just booked 2 hours ago 👀
+</div>
+
+<!-- Floating Chat Window -->
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+        Live Support
+        <span id="closeChat" style="cursor:pointer;">✖</span>
+    </div>
+
+    <div class="chat-body" id="chatMessages"></div>
+
+    <div class="chat-footer">
+        <input type="text" id="chatInput" placeholder="Type your message...">
+        <button id="sendChat">Send</button>
+    </div>
+</div>
+   
+    <script type="module" src="js/main.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADnhd33LbYXD1Mwx3b4OC6RJZlITJ6Yz4",
+  authDomain: "carenest-241b0.firebaseapp.com",
+  projectId: "carenest-241b0",
+  storageBucket: "carenest-241b0.firebasestorage.app",
+  messagingSenderId: "576445652959",
+  appId: "1:576445652959:web:ae99b694c81590c534ae6a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 🔥 MAKE GLOBAL (VERY IMPORTANT)
+window.db = db;
+window.addDoc = addDoc;
+window.collection = collection;
+</script>
+   </body>
+</html>

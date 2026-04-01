@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - CareNest</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f9;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .booking {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .pending {
+      color: orange;
+      font-weight: bold;
+    }
+
+    .confirmed {
+      color: green;
+      font-weight: bold;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .approve {
+      background: green;
+      color: white;
+    }
+
+    .view {
+      background: #2196f3;
+      color: white;
+      margin-left: 10px;
+    }
+
+    img {
+      max-width: 200px;
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📊 Admin Panel</h1>
+
+<div id="adminBookings"></div>
+
+<script src="admin.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+  emailjs.init("sT9uEp7hUmvfVUZW4");
+</script>
+
+
+</body>
+</html>

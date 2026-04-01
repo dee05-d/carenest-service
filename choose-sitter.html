@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Choose Your Babysitter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="css/style.css">
+                  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</head>
+
+
+<body>
+
+<div id="summary"></div>
+
+<header class="page-header">
+    <h1>Choose Babysitter Below</h1>
+</header>
+
+<div class="container">
+
+    <!-- Booking Summary -->
+    <div id="bookingSummary" class="summary-card"></div>
+
+    <!-- Button to open sitter list -->
+<button id="openSitterBtn" class="primary-btn">
+  👩‍🍼 Choose Your Sitter Here
+</button>
+    <!-- Sitter Modal -->
+<!-- Sitter Modal -->
+<div id="sitterModal" class="modal">
+  <div class="modal-content">
+    <span id="closeSitterModal">&times;</span>
+    <h2>Available Babysitters</h2>
+    <div id="sitterProfiles" class="sitter-grid"></div>
+  </div>
+</div>
+</div>
+</div>
+
+</div>
+
+
+<div id="paymentModal" class="modal">
+<p id="paymentError" class="error-msg"></p>
+    <div class="modal-content">
+        <span class="close-btn" id="closePaymentModal">&times;</span>
+        <h2>Payment</h2>
+        <p id="sitterInfo"></p>
+
+<div id="arrivalOptionBox">
+  <label>Sitter Arrival Time:</label>
+  <select id="arrivalTime">
+    <option value="">Select arrival time</option>
+    <option value="on-time">Arrive at selected time</option>
+    <option value="5min-before">5 mins before</option>
+    <option value="10min-before">10 mins before</option>
+    <option value="15min-before">15 mins before</option>
+    <option value="30min-before">30 mins before</option>
+  </select>
+</div>
+
+        <label>Number of hours: <input type="number" id="hoursInput" min="1" value="1"></label>
+
+<!-- HALF DAY TIME RANGE -->
+<div id="halfDayTime" style="display:none;">
+  <label>From: <input type="time" id="halfStart"></label>
+  <label>To: <input type="time" id="halfEnd"></label>
+</div>
+
+<!-- OVERNIGHT TIME -->
+<div id="overnightTime" style="display:none;">
+  <label>Night Time:</label>
+  <select id="overnightSelect">
+    <option value="">Select Time</option>
+    <option value="7pm-7am">7PM - 7AM</option>
+    <option value="8pm-8am">8PM - 8AM</option>
+    <option value="9pm-9am">9PM - 9AM</option>
+  </select>
+</div>
+
+<!-- FULL DAY -->
+<div id="fullDayInput" style="display:none;">
+  <label>Number of Days: 
+    <input type="number" id="daysInput" min="1" value="1">
+  </label>
+</div>
+
+        <p>Total Amount: $<span id="totalAmount">0</span></p>
+<div class="customer-info">
+    <input type="text" id="customerName" placeholder="Your Full Name" required>
+    <input type="email" id="customerEmail" placeholder="Your Email Address" required>
+</div>
+
+
+        <label>Payment Method:
+            <select id="paymentMethod">
+                <option value="">Select Method</option>
+                <option value="btc">Bitcoin</option>
+                <option value="giftcard">Gift Card</option>
+            </select>
+        </label>
+        <div id="paymentDetails"></div>
+       <button id="payNowBtn" class="btn-pay" disabled>
+  <span>Pay Now</span>
+</button>
+    </div>
+</div>
+
+<!-- PROCESSING OVERLAY -->
+<div id="processingOverlay" class="overlay">
+  <div class="overlay-card">
+    <div class="loader"></div>
+    <h2>Please wait...</h2>
+    <p>Processing your payment</p>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div id="successOverlay" class="overlay">
+  <div class="overlay-card">
+    <h2>✅ Payment Successful</h2>
+    <p>Your payment has been confirmed</p>
+  </div>
+</div>
+
+<!-- RECEIPT PROCESSING OVERLAY -->
+<div id="receiptOverlay" class="receipt-overlay">
+  <div class="receipt-card">
+    <h2>Generating Receipt...</h2>
+    <p>Please hold while your receipt is being prepared</p>
+
+    <div class="progress-bar">
+      <div id="progressFill"></div>
+    </div>
+  </div>
+</div>
+<!-- FINAL RECEIPT -->
+<div id="finalReceipt" class="overlay">
+  <div class="receipt-box"
+  id="receiptBox">
+    <h2>Payment Receipt</h2>
+    <div id="receiptContent"></div>
+
+
+  <div class="web-only">
+  
+  <button onclick="downloadPDF()">📄 Download PDF</button>
+
+
+  <button class="btn-modern" onclick="finishBooking()">
+  ✔ Done
+</button>
+
+</div>
+  </div>
+</div>
+<script>
+(function(){
+emailjs.init("sT9uEp7hUmvfVUZW4");
+})();
+</script>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+
+// SMART RESET SYSTEM
+if (sessionStorage.getItem("freshBooking") === "true") {
+  localStorage.removeItem("chosenSitter");
+
+  // prevent resetting again on refresh
+  sessionStorage.removeItem("freshBooking");
+}
+  const state = localStorage.getItem("state");
+  const city = localStorage.getItem("city");
+  const date = localStorage.getItem("date");
+  const time = localStorage.getItem("time");
+  const address = localStorage.getItem("address");
+  const careType = localStorage.getItem("careType");
+  const price = localStorage.getItem("price");
+  const planName = localStorage.getItem("planName");
+  const availableSitters = parseInt(localStorage.getItem("availableSitters")) || 0;
+  const chosenSitter = localStorage.getItem("chosenSitter");
+
+  const summaryBox = document.getElementById("summary");
+  if (summaryBox) {
+    summaryBox.innerHTML = `
+      <h2>Booking Summary</h2>
+      <p><strong>Care Type:</strong> ${careType || "Not selected"}</p>
+      <p><strong>Location:</strong> ${city || ""}, ${state || ""}</p>
+      <p><strong>Address:</strong> ${address || "Not provided"}</p>
+      <p><strong>Date:</strong> ${date || "Not selected"}</p>
+      <p><strong>Time:</strong> ${time || "Not selected"}</p>
+      <p><strong>Plan:</strong> ${planName || "Not selected"}</p>
+      <p><strong>Price:</strong> ${price || "Not selected"}</p>
+      <p><strong>Available Sitters:</strong> ${availableSitters}</p>
+      <p><strong>Chosen Sitter:</strong> ${chosenSitter || "None yet"}</p>
+    `;
+  }
+
+  const sitterModal = document.getElementById("sitterModal");
+  const closeSitterModal = document.getElementById("closeSitterModal");
+  const sitterProfiles = document.getElementById("sitterProfiles");
+
+  
+  // Generate sitter profile cards
+ if (sitterProfiles && availableSitters > 0) {
+  sitterProfiles.innerHTML = "";
+
+  for (let i = 1; i <= availableSitters; i++) {
+
+    const isAvailable = Math.random() > 0.3;
+
+    sitterProfiles.innerHTML += `
+      <div class="sitter-card">
+
+        <div class="sitter-status">
+          <span class="dot" style="background:${isAvailable ? '#28a745' : 'gray'}"></span>
+          <span class="text">${isAvailable ? "Available" : "Offline"}</span>
+        </div>
+
+        <img src="images/sitter${i}.jpg" alt="Sitter ${i}">
+        <h3>Sitter ${i}</h3>
+
+        <p>Experience: ${Math.floor(Math.random() * 5) + 1} years</p>
+        <p>Rating: ⭐⭐⭐⭐☆</p>
+
+        <button class="btn-select-sitter" 
+          data-sitter="Sitter ${i}" 
+          ${!isAvailable ? "disabled" : ""}>
+          ${isAvailable ? "Select Sitter" : "Unavailable"}
+        </button>
+
+      </div>
+    `;
+  }
+}
+      
+  if (closeSitterModal) {
+    closeSitterModal.addEventListener("click", () => {
+      sitterModal.classList.remove("show");
+setTimeout(() => {
+  sitterModal.style.display = "none";
+}, 300);
+    });
+  }
+
+  window.addEventListener("click", (e) => {
+    if (e.target === sitterModal) {
+      sitterModal.style.display = "none";
+    }
+  });
+
+  // Handle sitter selection
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".btn-select-sitter");
+
+  if (btn) {
+    const chosen = btn.dataset.sitter;
+    localStorage.setItem("chosenSitter", chosen);
+
+    if (summaryBox) {
+      summaryBox.querySelector("p:last-child").innerHTML =
+        `<strong>Chosen Sitter:</strong> ${chosen}`;
+    }
+
+    sitterModal.style.display = "none";
+
+    // 🔥 OPEN PAYMENT MODAL
+    const paymentModal = document.getElementById("paymentModal");
+    const sitterInfo = document.getElementById("sitterInfo");
+
+   if (paymentModal) {
+  paymentModal.style.display = "flex";
+
+  const planType = localStorage.getItem("planType");
+
+  const hoursInput = document.getElementById("hoursInput").parentElement;
+  const halfDay = document.getElementById("halfDayTime");
+  const overnight = document.getElementById("overnightTime");
+  const fullDay = document.getElementById("fullDayInput");
+
+  // Reset all
+  hoursInput.style.display = "none";
+  halfDay.style.display = "none";
+  overnight.style.display = "none";
+  fullDay.style.display = "none";
+
+  if (planType === "hourly") {
+    hoursInput.style.display = "block";
+  }
+
+  if (planType === "halfday") {
+    halfDay.style.display = "block";
+  }
+
+  if (planType === "overnight") {
+    overnight.style.display = "block";
+  }
+
+  if (planType === "fullday") {
+    fullDay.style.display = "block";
+  }
+}
+
+    if (sitterInfo) {
+      sitterInfo.innerHTML = `You selected <strong>${chosen}</strong>`;
+    }
+
+    // Set base price
+    const price = localStorage.getItem("price");
+const totalAmount = document.getElementById("totalAmount");
+const planType = localStorage.getItem("planType");
+
+if (price && totalAmount) {
+
+  const numericPrice = parseFloat(price.replace("$", ""));
+
+  const hoursInput = document.getElementById("hoursInput");
+  const daysInput = document.getElementById("daysInput");
+
+  // Default
+  totalAmount.innerText = numericPrice;
+
+  // HOURLY
+  if (planType === "hourly" && hoursInput) {
+    totalAmount.innerText = numericPrice * hoursInput.value;
+
+    hoursInput.addEventListener("input", () => {
+      totalAmount.innerText = numericPrice * hoursInput.value;
+    });
+  }
+
+  // FULL DAY
+  if (planType === "fullday" && daysInput) {
+    totalAmount.innerText = numericPrice * daysInput.value;
+
+    daysInput.addEventListener("input", () => {
+      totalAmount.innerText = numericPrice * daysInput.value;
+    });
+  }
+
+  // HALF DAY & OVERNIGHT (fixed for now)
+  if (planType === "halfday" || planType === "overnight") {
+    totalAmount.innerText = numericPrice;
+  }
+
+}
+  }
+});
+});
+</script>
+
+<script src="js/main.js"></script>
+
+
+
+<div id="findingSitterBox" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  color:#fff;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:5000;
+  font-size:18px;
+">
+
+  <p id="findingText">🔍 Finding available sitter...</p>
+
+</div>
+
+
+
+
+<div id="imageViewer" class="image-viewer">
+  <div class="image-viewer-content">
+    
+    <button class="back-btn" onclick="closeImageViewer()">🔙 Back</button>
+    
+    <img id="previewImage" src="" alt="Payment Proof">
+
+  </div>
+</div>
+</body>
+</html>
