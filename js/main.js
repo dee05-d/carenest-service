@@ -641,9 +641,7 @@ try {
   planName: localStorage.getItem("planName")
 };
 
-let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
-bookings.push(booking);
-localStorage.setItem("bookings", JSON.stringify(bookings));
+firebase.database().ref("bookings/" + receiptId).set(booking);
 localStorage.setItem("currentReceiptId", receiptId);
 
 
@@ -977,16 +975,12 @@ function watchBookingStatus() {
   const receiptId = localStorage.getItem("currentReceiptId");
   if (!receiptId) return;
 
-  setInterval(() => {
+  firebase.database().ref("bookings/" + receiptId).on("value", (snapshot) => {
 
-    let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
-
-    const booking = bookings.find(b => b.receiptId === receiptId);
-
+    const booking = snapshot.val();
     if (!booking) return;
 
     const statusEl = document.getElementById("receiptStatus");
-
     if (!statusEl) return;
 
     if (booking.status === "confirmed") {
@@ -994,11 +988,10 @@ function watchBookingStatus() {
       statusEl.innerHTML = "✅ <strong>Status:</strong> Payment Confirmed";
       statusEl.style.color = "green";
 
-      // OPTIONAL 🔥 success animation
+      // Optional styling (same as your own)
       statusEl.style.fontSize = "18px";
       statusEl.style.fontWeight = "bold";
-
     }
 
-  }, 3000); // checks every 3 seconds
+  });
 }
