@@ -1,3 +1,17 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyBh_L78r2fvxhvDpJHyyo96fATmXtfLBcI",
+  authDomain: "carenest-72c57.firebaseapp.com",
+  databaseURL: "https://carenest-72c57-default-rtdb.firebaseio.com",
+  projectId: "carenest-72c57",
+  storageBucket: "carenest-72c57.firebasestorage.app",
+  messagingSenderId: "886796282957",
+  appId: "1:886796282957:web:f482f30e232e5ffac00004",
+  measurementId: "G-2H52H5R8VB"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 document.addEventListener("DOMContentLoaded", function () {
 
 
@@ -641,7 +655,7 @@ try {
   planName: localStorage.getItem("planName")
 };
 
-firebase.database().ref("bookings/" + receiptId).set(booking);
+db.ref("bookings/" + receiptId).set(booking);
 localStorage.setItem("currentReceiptId", receiptId);
 
 
@@ -995,3 +1009,4 @@ function watchBookingStatus() {
 
   });
 }
+
