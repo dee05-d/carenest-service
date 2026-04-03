@@ -21,12 +21,7 @@
 <body>
     <header>
         <h1>BabySitter Service</h1>
-        <nav>
-            <a href="index.html" class="nav-link">Home</a>
-            <a href="services.html" class="nav-link">Services</a>
-            <a href="order.html" class="nav-link">Order Now</a>
-            <a href="about.html" class="nav-link">About</a>
-        </nav>
+       
     </header>
 
     <!-- Hero Section -->
@@ -36,7 +31,7 @@
      <div class="availability">
     <span class="dot"></span> Available Now
    </div>
-        <a href="order.html" class="btn">Book Now</a>
+        <a href=" " class="btn">Book Now</a>
     </section>
 
 <div class="booking-grid">
@@ -340,28 +335,7 @@
         <button id="sendChat">Send</button>
     </div>
 </div>
-   
-    <script type="module" src="js/main.js"></script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyADnhd33LbYXD1Mwx3b4OC6RJZlITJ6Yz4",
-  authDomain: "carenest-241b0.firebaseapp.com",
-  projectId: "carenest-241b0",
-  storageBucket: "carenest-241b0.firebasestorage.app",
-  messagingSenderId: "576445652959",
-  appId: "1:576445652959:web:ae99b694c81590c534ae6a"
-};
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// 🔥 MAKE GLOBAL (VERY IMPORTANT)
-window.db = db;
-window.addDoc = addDoc;
-window.collection = collection;
-</script>
    </body>
 </html>

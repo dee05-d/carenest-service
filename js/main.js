@@ -1,16 +1,3 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyBh_L78r2fvxhvDpJHyyo96fATmXtfLBcI",
-  authDomain: "carenest-72c57.firebaseapp.com",
-  databaseURL: "https://carenest-72c57-default-rtdb.firebaseio.com",
-  projectId: "carenest-72c57",
-  storageBucket: "carenest-72c57.firebasestorage.app",
-  messagingSenderId: "886796282957",
-  appId: "1:886796282957:web:f482f30e232e5ffac00004",
-  measurementId: "G-2H52H5R8VB"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -597,7 +584,6 @@ function continuePayment(name, email, sitter, price, method, btcWallet, paymentI
 const receiptId = generateReceiptId();
 localStorage.setItem("currentReceiptId", receiptId); 
 
-
 let arrival = "";
 
 try {
@@ -606,6 +592,38 @@ try {
   console.error("Arrival error:", e);
   arrival = "On-time";
 }
+
+
+  const booking = {
+  receiptId,
+  name,
+  email,
+  sitter,
+  price,
+  method,
+  btcWallet,
+  paymentImageURL,
+  status: "pending",
+  date: localStorage.getItem("date"),
+  time: localStorage.getItem("time"),
+  city: localStorage.getItem("city"),
+  state: localStorage.getItem("state"),
+  address: localStorage.getItem("address"),
+  arrival: arrival,
+
+  careType: localStorage.getItem("careType"),
+  planName: localStorage.getItem("planName")
+};
+
+db.ref("bookings/" + receiptId).set(booking)
+  .then(() => {
+    console.log("✅ Saved to Firebase");
+  })
+  .catch((error) => {
+    console.error("❌ Firebase error:", error);
+  });
+
+
 
     if (processingOverlay) {
       processingOverlay.style.display = "flex";
@@ -636,34 +654,7 @@ try {
             clearInterval(interval);
 
       
-   const booking = {
-  receiptId,
-  name,
-  email,
-  sitter,
-  price,
-  method,
-  btcWallet,
-  paymentImageURL,
-  status: "pending",
-  date: localStorage.getItem("date"),
-  time: localStorage.getItem("time"),
-  city: localStorage.getItem("city"),
-  state: localStorage.getItem("state"),
-  address: localStorage.getItem("address"),
-  arrival: arrival,
-
-  careType: localStorage.getItem("careType"),
-  planName: localStorage.getItem("planName")
-};
-
-db.ref("bookings/" + receiptId).set(booking)
-  .then(() => {
-    console.log("✅ Saved to Firebase");
-  })
-  .catch((error) => {
-    console.error("❌ Firebase error:", error);
-  });
+ 
 
 
 
