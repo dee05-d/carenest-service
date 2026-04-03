@@ -443,7 +443,7 @@ localStorage.setItem("availableSitters", availableSitters);
     ====================================== */
     const navLinks = document.querySelectorAll(".nav-link");
     navLinks.forEach(link => {
-        if (link.href === choose-sitter.html) {
+        if (link.href.includes("choose-sitter.html")) {
             link.style.fontWeight = "bold";
             link.style.color = "#ff9800";
         }
@@ -595,6 +595,8 @@ function generateReceiptId() {
 function continuePayment(name, email, sitter, price, method, btcWallet, paymentImageURL) {
 
 const receiptId = generateReceiptId();
+localStorage.setItem("currentReceiptId", receiptId); 
+
 
 let arrival = "";
 
@@ -655,8 +657,14 @@ try {
   planName: localStorage.getItem("planName")
 };
 
-db.ref("bookings/" + receiptId).set(booking);
-localStorage.setItem("currentReceiptId", receiptId);
+db.ref("bookings/" + receiptId).set(booking)
+  .then(() => {
+    console.log("✅ Saved to Firebase");
+  })
+  .catch((error) => {
+    console.error("❌ Firebase error:", error);
+  });
+
 
 
             // STEP 3: SHOW FINAL RECEIPT
